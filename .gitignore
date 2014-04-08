@@ -2,3 +2,4 @@ trash
 classes
 vendor
 composer.lock
+config.php

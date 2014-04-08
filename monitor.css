@@ -1,0 +1,39 @@
+table.inv {
+    border: 1px solid #e7e7e7;
+}
+
+table.inv tr td {
+    border-right: 1px solid #e7e7e7;
+    border-top: 1px solid #e7e7e7;
+}
+
+table.inv tr.inv-success {
+    color: #008000;
+    background-color: #EEFBEE;
+}
+
+table.inv tr.inv-success td.delta {
+    background-image: url('profit.png');
+    background-repeat: no-repeat;
+    background-position: left, top;
+    text-align: right;
+}
+
+table.inv tr.inv-loss {
+    color: #D10C1B;
+    background-color: #FCE9EB;
+}
+
+table.inv tr.inv-loss td.delta {
+    background-image: url('loss.png');
+    background-repeat: no-repeat;
+    background-position: left, top;
+    text-align: right;
+}
+
+table.inv tr td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+    padding-right: 5px;
+}
