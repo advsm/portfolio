@@ -60,9 +60,6 @@ class MonitorFormatter
     public function render()
     {
         ob_start();
-        //echo '<link href="monitor.css" type="text/css" rel="stylesheet" />';
-        echo '<link href="/css/zebra.css" type="text/css" rel="stylesheet" />';
-        echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
         echo "<table class='zebra'>";
         echo "<tr>
         <th>Площадка, ПАММ</th>

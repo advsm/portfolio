@@ -9,7 +9,7 @@ $config = new Masterfolio\Config(require 'config.php');
 $portfolio = new Masterfolio\Portfolio($config);
 
 // Получение прибыли по портфелю за текущий месяц
-$xml = $portfolio->getProfitForPeriod('2014-05-01', '2014-05-18');
+$xml = $portfolio->getProfitForPeriod('2014-05-01', '2014-05-31');
 
 // Вывод прибыли
 $formatter = new MonitorFormatter($xml);
