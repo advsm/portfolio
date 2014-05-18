@@ -129,7 +129,7 @@ class ActiveFormatter
      */
     public function getIcon()
     {
-        return "icon/" . $this->icon;
+        return "/monitor/icon/" . $this->icon;
     }
 
     /**
@@ -151,7 +151,7 @@ class ActiveFormatter
      */
     public function getPlatformUrl()
     {
-        return 'http://antines.ru/v/' . strtolower($this->getPlatformName());
+        return '/v/' . strtolower($this->getPlatformName());
     }
 
     /**
