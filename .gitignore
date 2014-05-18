@@ -1,5 +1,7 @@
 trash
 classes
 vendor
+composer.phar
 composer.lock
 config.php
+.idea

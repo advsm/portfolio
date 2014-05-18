@@ -25,7 +25,6 @@ class MonitorFormatter
         $this->data = $data;
 
         $actives = [];
-        $sort    = [];
         foreach ($data->data->accounts->account as $account) {
             foreach ($account->assets->asset as $asset) {
                 $active = new ActiveFormatter();
@@ -38,6 +37,7 @@ class MonitorFormatter
                 $active->delta           = $asset->delta->USD->__toString();
                 $active->relativeDelta   = $asset->relative_delta->USD->__toString();
                 $active->icon            = $account->icon->__toString();
+                $active->shift          = $asset->shifts->USD->__toString();
 
                 $actives[ $active->id ] = $active;
                 $sorted [ $active->id ] = $active->relativeDelta;
@@ -60,16 +60,19 @@ class MonitorFormatter
     public function render()
     {
         ob_start();
-        echo '<link href="monitor.css" type="text/css" rel="stylesheet" />';
+        //echo '<link href="monitor.css" type="text/css" rel="stylesheet" />';
+        echo '<link href="/css/zebra.css" type="text/css" rel="stylesheet" />';
         echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
-        echo "<table class='inv'>";
+        echo "<table class='zebra'>";
         echo "<tr>
         <th>Площадка, ПАММ</th>
         <th>Было</th>
         <th>Стало</th>
+        <th>Ввод/Вывод</th>
         <th>Доход в $</th>
         <th>Доход в %</th>
         </tr>";
+
         foreach ($this->actives as $active) {
             $class = 'inv-loss';
             if ($active->isProfit()) {
@@ -82,15 +85,17 @@ class MonitorFormatter
             echo " <a href='{$active->getUrl()}'>{$active->getName()}</a></td>";
             echo "<td>" . $this->formatBalance($active->getPreviousBalance()) . "</td>";
             echo "<td>" . $this->formatBalance($active->getBalance()) . "</td>";
+            echo "<td>" . $this->formatBalance($active->shift) . "</td>";
             echo "<td class='delta'>" . $this->formatBalance($active->getDelta())             . "</td>";
             echo "<td class='delta'>" . $this->formatDelta($active->getRelativeDelta())     . "</td>";
 
             echo "</tr>";
         }
 
-        echo "<tr class='inv-success'><td>Всего за период</td>
+        echo "<tr class='inv-success'><td>Всего</td>
         <td>" . $this->formatBalance($this->data->data->previous_balance->USD->__toString()) . "</td>
         <td>" . $this->formatBalance($this->data->data->total->USD->__toString()) . "</td>
+        <td>" . $this->formatBalance($this->data->data->shifts->USD->__toString()) . "</td>
         <td class='delta'>" . $this->formatBalance($this->data->data->delta->USD->__toString()) . "</td>
         <td class='delta'>" . $this->formatDelta($this->data->data->relative_delta->USD->__toString()) . "</td></tr>";
         echo "</table>";

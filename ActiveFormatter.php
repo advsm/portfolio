@@ -55,6 +55,14 @@ class ActiveFormatter
      * @var string
      */
     public $icon;
+
+    /**
+     * Суммарное значение операций ввода-вывода за период
+     *
+     * @var float
+     */
+    public $shift;
+
     /**
      * @return string
      */
