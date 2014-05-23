@@ -21,6 +21,13 @@ class MonitorFormatter
      */
     private $actives;
 
+    /**
+     * Конфигурационный массив приложения
+     *
+     * @var array
+     */
+    private $config;
+
     public function __construct(SimpleXMLElement $data) {
         $this->data = $data;
 
@@ -128,5 +135,21 @@ class MonitorFormatter
         }
 
         return '- ' . abs($delta) . '%';
+    }
+
+    /**
+     * Устанавливает конфиг.
+     *
+     * @param array $config
+     * @return $this
+     */
+    public function setConfig($config)
+    {
+        $this->config = $config;
+        foreach ($this->actives as $active) {
+            $active->setConfig($config);
+        }
+
+        return $this;
     }
 }

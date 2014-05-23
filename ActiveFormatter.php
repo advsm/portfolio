@@ -64,6 +64,13 @@ class ActiveFormatter
     public $shift;
 
     /**
+     * Конфигурационный массив приложения
+     *
+     * @var array
+     */
+    private $config;
+
+    /**
      * @return string
      */
     public function getPlatformName()
@@ -129,7 +136,7 @@ class ActiveFormatter
      */
     public function getIcon()
     {
-        return "/monitor/icon/" . $this->icon;
+        return "{$this->config['baseUrl']}/icon/" . $this->icon;
     }
 
     /**
@@ -147,59 +154,51 @@ class ActiveFormatter
     }
 
     /**
+     * Возвращает URL на брокера.
+     *
      * @return string
      */
     public function getPlatformUrl()
     {
-        return '/v/' . strtolower($this->getPlatformName());
+        return $this->config['brokers'][$this->getPlatformName()]['url'];
     }
 
     /**
+     * Возвращает партнерский URL на актив.
+     *
      * @return string
      */
     public function getUrl()
     {
-        if (in_array($this->id, [22294, 22295])) {
-            return '/v/alpari/petrov-ivan';
+        $pammId = null;
+        if (preg_match('/[0-9]{4,10}/', $this->name, $matches)) {
+            $pammId = $matches[0];
         }
 
-        if ($this->id == 67412) {
-            return '/v/panteon-finance/stable';
+        if (!$pammId) {
+            $pamms = $this->config['brokers'][$this->getPlatformName()]['pamms'];
+            if (!isset($pamms[$this->name])) {
+                return $this->getPlatformUrl();
+            }
+
+            $pammId = $pamms[$this->name];
         }
 
-        $platform = strtolower($this->getPlatformName());
-        if ($platform === 'panteon') {
-            $platform = 'panteon-finance';
-        }
+        $pammUrl = $this->config['brokers'][$this->getPlatformName()]['pammUrl'];
+        $pammUrl = str_replace('{pamm}', $pammId, $pammUrl);
+        return $pammUrl;
+    }
 
-        $name = str_replace('_', '-', $this->getName());
-        $name = str_replace(' ', '-', $name);
-        $name = rtrim($name, '-');
 
-        if ($this->getName() === 'Mill Trade - Золотая 7') {
-            return $this->getPlatformUrl() . '-gold7';
-        }
-
-        if ($this->getName() === 'памм-фонд-стабильный') {
-            $name = 'stable';
-        }
-
-        if (strtolower($this->getName()) === 'mmcis index top 20') {
-            return '/v/mmcis';
-        }
-
-        if ($this->getName() === 'Trade-Bowl(ECNp20)') {
-            $name = 'trade-bowl20';
-        }
-
-        if ($this->getName() === 'elrid(homeinvestblog)') {
-            $name = 'elrid';
-        }
-
-        if ($name === 'petrov-ivan') {
-            $platform = 'alpari';
-        }
-
-        return '/v/' . $platform . '/' . strtolower($name);
+    /**
+     * Устанавливает конфиг.
+     *
+     * @param array $config
+     * @return $this
+     */
+    public function setConfig($config)
+    {
+        $this->config = $config;
+        return $this;
     }
 }

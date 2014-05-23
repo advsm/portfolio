@@ -3,5 +3,5 @@ classes
 vendor
 composer.phar
 composer.lock
-config.php
+config/local.php
 .idea
