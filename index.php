@@ -51,8 +51,8 @@ $formatter->setConfig($config);
 
 <div id="portfolio">
     <form action="" method="get">
-        <input type="text" name="from" value="<?= (isset($_GET['from']) ? $from : '') ?>" /> -
-        <input type="text" name="to"   value="<?= (isset($_GET['to'])   ? $to   : '') ?>" />
+        <input type="text" name="from" value="<?= $from ?>" /> -
+        <input type="text" name="to"   value="<?= $to ?>" />
         <input type="submit" value="Показать за выбранный период" />
     </form>
 </div>
