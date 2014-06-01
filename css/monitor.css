@@ -13,7 +13,7 @@ table.inv tr.inv-success {
 }
 
 table.inv tr.inv-success td.delta {
-    background-image: url('profit.png');
+    background-image: url('../profit.png');
     background-repeat: no-repeat;
     background-position: left, top;
     text-align: right;
@@ -25,7 +25,7 @@ table.inv tr.inv-loss {
 }
 
 table.inv tr.inv-loss td.delta {
-    background-image: url('loss.png');
+    background-image: url('../loss.png');
     background-repeat: no-repeat;
     background-position: left, top;
     text-align: right;

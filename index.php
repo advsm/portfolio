@@ -8,16 +8,56 @@ require_once 'ActiveFormatter.php';
 $config = new Masterfolio\Config(require 'config/application.php');
 $portfolio = new Masterfolio\Portfolio($config);
 
+$requestFrom = isset($_GET['from']) ? $_GET['from'] : date('Y-m-01');
+$requestTo   = isset($_GET['to'])   ? $_GET['to']   : date('Y-m-t');
+
+$timestampFrom = strtotime($requestFrom);
+$timestampTo   = strtotime($requestTo);
+
+if ($timestampFrom > $timestampTo) {
+    $t             = $timestampFrom;
+    $timestampFrom = $timestampTo;
+    $timestampTo   = $t;
+    unset($t);
+}
+
+if (!$timestampFrom || !$timestampTo) {
+    $from = date('Y-m-01');
+    $to   = date('Y-m-t');
+} else {
+    $from = date('Y-m-d', $timestampFrom);
+    $to   = date('Y-m-d', $timestampTo);
+
+    if (!$from || !$to) {
+        $from = date('Y-m-01');
+        $to   = date('Y-m-t');
+    }
+}
+
+
 // Получение прибыли по портфелю за текущий месяц
-$xml = $portfolio->getProfitForPeriod('2014-05-01', '2014-05-31');
+$xml = $portfolio->getProfitForPeriod($from, $to);
 
 
 // Вывод прибыли
 $formatter = new MonitorFormatter($xml);
 $formatter->setConfig($config);
 
-echo "<meta charset='utf-8' />";
-echo "<link rel='stylesheet' href='{$config['baseUrl']}/css/zebra.css' />";
+?>
+
+<meta charset='utf-8' />
+<link rel="stylesheet" href="<?= $config['baseUrl'] ?>/css/zebra.css" />
+<link rel="stylesheet" href="<?= $config['baseUrl'] ?>/css/form.css" />
+
+<div id="portfolio">
+    <form action="" method="get">
+        <input type="text" name="from" value="<?= (isset($_GET['from']) ? $from : '') ?>" placeholder="Дата начала периода" /> -
+        <input type="text" name="to"   value="<?= (isset($_GET['to'])   ? $to   : '') ?>" placeholder="Дата конца периода"/>
+        <input type="submit" value="Показать за выбранный период" />
+    </form>
+</div>
+
+<?php
 echo $formatter->render();
 
 
