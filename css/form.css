@@ -1,14 +1,16 @@
 
+#portfolio {
+    margin-bottom: 5px;
+}
+
 #portfolio input {
     background-color: rgb(51, 51, 51);
     border:           3px solid rgb(34, 34, 34);
     border-radius:    3px;
     color:            rgb(187, 187, 187);
-    height:           40px;
     padding:          4px;
     padding-left:     10px;
     padding-right:    10px;
 
     font-size:        16px;
-
 }
