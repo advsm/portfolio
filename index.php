@@ -58,6 +58,6 @@ $formatter->setConfig($config);
 </div>
 
 <?php
-echo $formatter->render();
+echo $formatter->renderByBroker();
 
 

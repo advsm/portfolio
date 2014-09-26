@@ -124,6 +124,86 @@ class MonitorFormatter
     }
 
     /**
+     * Рисует таблицу доходности по предоставленным данным.
+     *
+     * @return string
+     */
+    public function renderByBroker()
+    {
+        ob_start();
+        echo "<table class='zebra'>";
+        echo "<tr>
+        <th>&nbsp;</th>
+        <th>Было</th>
+        <th>Стало</th>
+        <th>Ввод/Вывод</th>
+        <th>Доход в $</th>
+        <th>Доход в %</th>
+        </tr>";
+
+        $sortedByBrokers = [];
+        foreach ($this->actives as $active) {
+            $sortedByBrokers[$active->getPlatformName()][] = $active;
+        }
+
+        foreach ($sortedByBrokers as $brokerName => $actives) {
+
+            $allBrokerActives = '';
+            $totalPreviousBalance = 0;
+            $totalBalance         = 0;
+            $totalShifts          = 0;
+            $totalDelta           = 0;
+            $relativeDeltas       = [];
+            foreach ($actives as $active) {
+                $class = 'inv-loss';
+                if ($active->isProfit()) {
+                    $class = 'inv-success';
+                }
+
+                $allBrokerActives .= "<tr class='$class'>";
+
+                $allBrokerActives .= "<td><a href='{$active->getPlatformUrl()}'><img width='20' height='20' src='{$active->getIcon()}' /></a>";
+                $allBrokerActives .= " <a href='{$active->getUrl()}'>{$active->getName()}</a></td>";
+                $allBrokerActives .= "<td>" . $this->formatBalance($active->getPreviousBalance()) . "</td>";
+                $allBrokerActives .= "<td>" . $this->formatBalance($active->getBalance()) . "</td>";
+                $allBrokerActives .= "<td>" . $this->formatBalance($active->shift) . "</td>";
+                $allBrokerActives .= "<td class='delta'>" . $this->formatBalance($active->getDelta())             . "</td>";
+                $allBrokerActives .= "<td class='delta'>" . $this->formatDelta($active->getRelativeDelta())     . "</td>";
+                $allBrokerActives .= "</tr>";
+
+                $totalPreviousBalance += $active->previousBalance;
+                $totalBalance         += $active->balance;
+                $totalShifts          += $active->shift;
+                $totalDelta           += $active->getDelta();
+                $relativeDeltas[]      = $active->getRelativeDelta();
+            }
+
+            $totalRelativeDelta    = round(array_sum($relativeDeltas) / count($relativeDeltas), 2);
+
+            echo "<tr>";
+            echo "<th><a href='{$active->getPlatformUrl()}'><img width='20' height='20' src='{$active->getIcon()}' /><a href='{$active->getUrl()}'>{$brokerName}</a></th>";
+            echo "<th>" . $this->formatBalance($totalPreviousBalance) . "</th>";
+            echo "<th>" . $this->formatBalance($totalBalance) . "</th>";
+            echo "<th>" . $this->formatBalance($totalShifts) . "</th>";
+            echo "<th class='delta'>" . $this->formatBalance($totalDelta)             . "</th>";
+            echo "<th class='delta'>" . $this->formatDelta($totalRelativeDelta)     . "</th>";
+            echo "</tr>";
+
+            echo $allBrokerActives;
+        }
+
+        echo "<tr class='inv-success'><th>Всего</th>
+        <th>" . $this->formatBalance($this->data->data->previous_balance->USD->__toString()) . "</th>
+        <th>" . $this->formatBalance($this->data->data->total->USD->__toString()) . "</th>
+        <th>" . $this->formatBalance($this->data->data->shifts->USD->__toString()) . "</th>
+        <th class='delta'>" . $this->formatBalance($this->data->data->delta->USD->__toString()) . "</th>
+        <th class='delta'>" . $this->formatDelta($this->data->data->relative_delta->USD->__toString()) . "</th></tr>";
+        echo "</table>";
+
+        return ob_get_clean();
+    }
+
+    /**
      * Возвращает баланс актива, отформатированный в завасимости от того, прибыль это или убыток.
      *
      * @param string $balance
