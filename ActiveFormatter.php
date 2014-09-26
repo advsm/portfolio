@@ -91,7 +91,7 @@ class ActiveFormatter
             )
         );
 
-        $name = preg_replace('/[0-9]{3,}/uis', '', $name);
+        $name = preg_replace('/\([0-9]{3,}\)/uis', '', $name);
         $name = rtrim($name, ':');
         $name = rtrim($name, '-');
         return $name;
