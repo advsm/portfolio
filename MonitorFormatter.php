@@ -56,7 +56,23 @@ class MonitorFormatter
             $sorted[$id] = $actives[$id];
         }
 
-        $this->actives = $sorted;
+        $aggregated = [];
+        foreach ($sorted as $active) {
+            $name = $active->name;
+            if (isset($aggregated[$name])) {
+                $a = $aggregated[$name];
+                $a->balance         += $active->balance;
+                $a->previousBalance += $active->previousBalance;
+                $a->delta           += $active->delta;
+                $a->relativeDelta    = round(($a->relativeDelta + $active->relativeDelta) / 2, 2);
+
+                continue;
+            }
+
+            $aggregated[$name] = $active;
+        }
+
+        $this->actives = $aggregated;
     }
 
     /**
