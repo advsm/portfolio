@@ -180,7 +180,7 @@ class MonitorFormatter
             $totalRelativeDelta    = round(array_sum($relativeDeltas) / count($relativeDeltas), 2);
 
             echo "<tr>";
-            echo "<th><a href='{$active->getPlatformUrl()}'><img width='20' height='20' src='{$active->getIcon()}' /> &nbsp;&nbsp; <a href='{$active->getUrl()}'>{$brokerName}</a></th>";
+            echo "<th><a href='{$active->getPlatformUrl()}'><img width='20' height='20' src='{$active->getIcon()}' /></a> &nbsp;&nbsp; <a href='{$active->getPlatformUrl()}'>{$brokerName}</a></th>";
             echo "<th>" . $this->formatBalance($totalPreviousBalance) . "</th>";
             echo "<th>" . $this->formatBalance($totalBalance) . "</th>";
             echo "<th>" . $this->formatBalance($totalShifts) . "</th>";
